@@ -1,0 +1,90 @@
+<!-- public/chat.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Room</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Chat Room</h1>
+    <div id="chat-box" style="height:300px; border:1px solid #ccc; padding:10px; overflow-y:scroll;">
+      <!-- Chat messages will appear here -->
+    </div>
+    <div id="typingIndicator" style="font-style: italic; color: #555;"></div>
+    <form id="chat-form">
+      <input id="msg" type="text" placeholder="Type your message..." autocomplete="off" required>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+  <script>
+    // Extract query parameters (user1 and user2) to create a unique room ID
+    const urlParams = new URLSearchParams(window.location.search);
+    const user1 = urlParams.get('user1');
+    const user2 = urlParams.get('user2');
+    const room = [user1, user2].sort().join('-'); // Sorting ensures a consistent room id
+
+    const socket = io();
+
+    // Join the room with sender info
+    socket.emit('joinRoom', { room, user: user1 });
+
+    // Load previous messages (chat history)
+    socket.on('chatHistory', (messages) => {
+      const chatBox = document.getElementById('chat-box');
+      messages.forEach(msg => {
+        const messageElement = document.createElement('p');
+        messageElement.innerHTML = `<strong>${msg.sender}</strong> <span class="timestamp">${new Date(msg.timestamp).toLocaleTimeString()}</span>: ${msg.text}`;
+        chatBox.appendChild(messageElement);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    // Listen for incoming messages
+    socket.on('chatMessage', (data) => {
+      const chatBox = document.getElementById('chat-box');
+      const messageElement = document.createElement('p');
+      messageElement.innerHTML = `<strong>${data.sender}</strong> <span class="timestamp">${new Date(data.timestamp).toLocaleTimeString()}</span>: ${data.text}`;
+      chatBox.appendChild(messageElement);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    // Typing indicator handling
+    let typingTimer;
+    const typingTimeout = 3000;
+    const msgInput = document.getElementById('msg');
+    msgInput.addEventListener('input', () => {
+      socket.emit('typing', { room, user: user1 });
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        socket.emit('stopTyping', { room, user: user1 });
+      }, typingTimeout);
+    });
+
+    socket.on('typing', function(data) {
+      document.getElementById('typingIndicator').textContent = `${data.user} is typing...`;
+    });
+
+    socket.on('stopTyping', function(data) {
+      document.getElementById('typingIndicator').textContent = '';
+    });
+
+    // Send message on form submission
+    document.getElementById('chat-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const message = msgInput.value;
+      socket.emit('chatMessage', { room, sender: user1, message });
+      msgInput.value = '';
+      socket.emit('stopTyping', { room, user: user1 });
+    });
+
+    // Optionally, mark messages as read when chat-box is scrolled into view
+    // (This is a basic example; you can enhance it as needed)
+    window.addEventListener('focus', () => {
+      socket.emit('markAsRead', { room, user: user1 });
+    });
+  </script>
+</body>
+</html>

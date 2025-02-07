@@ -1,0 +1,65 @@
+/* public/style.css */
+body {
+  background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 500px;
+  margin: 50px auto;
+  background: rgba(255,255,255,0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+h1, h2 {
+  color: #e91e63;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+label {
+  margin: 10px 0 5px;
+}
+
+input, select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #d81b60;
+}
+
+a {
+  display: block;
+  margin-top: 20px;
+  color: #e91e63;
+  text-decoration: none;
+}
+
+.timestamp {
+  font-size: 0.8em;
+  color: #555;
+}
