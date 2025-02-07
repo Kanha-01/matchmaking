@@ -3,7 +3,7 @@
     "body-parser": "^1.20.3",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mongoose": "^8.9.7",
+    "mongoose": "^8.10.0",
     "nodemailer": "^6.10.0",
     "socket.io": "^4.8.1"
   },
@@ -18,5 +18,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kanha-01/matchmaking.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Kanha-01/matchmaking/issues"
+  },
+  "homepage": "https://github.com/Kanha-01/matchmaking#readme",
   "description": ""
 }
