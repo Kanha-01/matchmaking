@@ -9,7 +9,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 // Import Message model
-const Message = require('./models/message.js');
+const Message = require('./models/Message.js');
 
 const app = express();
 const server = http.createServer(app);
